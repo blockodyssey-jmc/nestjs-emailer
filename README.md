@@ -32,6 +32,16 @@
 $ npm install
 ```
 
+## MQ Docker rising
+
+```bash
+# 
+$ docker run -d --hostname my-rabbit --name some-rabbit   -p 5672:5672 -p 15672:15672  -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+
+
+
+```
+
 ## Running the app
 
 ```bash
@@ -43,6 +53,7 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
 ```
 
 ## Test
