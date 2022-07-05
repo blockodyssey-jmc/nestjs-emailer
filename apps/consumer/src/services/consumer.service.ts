@@ -27,6 +27,7 @@ export class ConsumerService {
   @RabbitSubscribe({
     exchange: 'email',
     routingKey: 'email.*',
+    queue: 'mailer-queue',
   })
   async sendEmail(msg: Msg) {
     const emailStatement = await this.createEmailData(msg);
