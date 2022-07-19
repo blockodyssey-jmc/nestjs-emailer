@@ -1,5 +1,5 @@
-import { UserEntity } from '../../../producer/src/entity/UserEntity';
-import { EmailType } from '../../../producer/src/class/emailType';
+import { UserEntity } from '../entity/UserEntity';
+import { EmailType } from '../class/emailType';
 
 export interface Msg {
   target: UserEntity;

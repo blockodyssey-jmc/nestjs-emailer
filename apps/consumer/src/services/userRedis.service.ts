@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { EmailType } from '../../../producer/src/class/emailType';
 import { MockRedisService } from './redis.service';
+import { EmailType } from '../class/emailType';
 
 interface UserRedisService {
   getRedisKeyForAuthMail(name: string);

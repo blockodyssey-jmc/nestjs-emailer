@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ProducerService } from './producer.service';
+import { ProducerService } from '../services/producer.service';
 import { MailRequestDto } from '../dto/mail.request.dto';
 import { UserEntity } from '../entity/UserEntity';
 

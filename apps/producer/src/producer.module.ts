@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ProducerController } from './producer/producer.controller';
-import { ProducerService } from './producer/producer.service';
+import { ProducerController } from './controllers/producer.controller';
+import { ProducerService } from './services/producer.service';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 
 @Module({
