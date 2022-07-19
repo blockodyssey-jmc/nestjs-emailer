@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Logger, ConflictException, Injectable } from '@nestjs/common';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { MailRequestDto } from '../dto/mail.request.dto';
 import { UserEntity } from '../entity/UserEntity';
@@ -9,18 +9,21 @@ export class ProducerService {
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
   publishToEmailSendServer(publishInfo: Email, anUser: UserEntity) {
+    const message = {
+      target: anUser,
+      type: publishInfo.type,
+    };
     try {
       this.amqpConnection.publish(
         publishInfo.exchange,
         publishInfo.routingKey,
-        {
-          target: anUser,
-          type: publishInfo.type,
-        },
+        message,
       );
+
+      Logger.log(`이메일 전송 완료.. Message :  ${JSON.stringify(message)}`);
       return '이메일 전송 완료';
     } catch (e) {
-      console.log(e);
+      Logger.log(`이메일 전송 실패 - data : ${JSON.stringify(message)} : ${e}`);
       throw new ConflictException();
     }
   }

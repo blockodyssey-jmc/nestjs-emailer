@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Nack, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { MockUserRedisService } from './userRedis.service';
 import { AuthMail, BlockUserMail } from '../class/Mail';
-import { EmailType } from '../../../producer/src/class/emailType';
 import { Msg } from '../interface/interfaces';
 import { MailerService } from '@nestjs-modules/mailer';
+import { EmailType } from '../class/emailType';
 
 @Injectable()
 export class ConsumerService {
@@ -29,10 +29,15 @@ export class ConsumerService {
     routingKey: 'email.*',
     queue: 'mailer-queue',
   })
-  async sendEmail(msg: Msg) {
-    const emailStatement = await this.createEmailData(msg);
+  async sendEmail(message: Msg) {
+    Logger.log(`email data received - data : ${JSON.stringify(message)}`);
 
-    await this.userRedisService.storeRedisKey(msg.type, emailStatement.context);
+    const emailStatement = await this.createEmailData(message);
+
+    await this.userRedisService.storeRedisKey(
+      message.type,
+      emailStatement.context,
+    );
 
     await this.mailerService
       .sendMail({
@@ -42,6 +47,11 @@ export class ConsumerService {
         context: emailStatement.context,
       })
       .catch((e) => {
+        Logger.error(
+          `failed to process mq - requeuing data : ${JSON.stringify(
+            message,
+          )}  error : ${e}`,
+        );
         new Nack(true);
         throw new BadRequestException(e);
       });
