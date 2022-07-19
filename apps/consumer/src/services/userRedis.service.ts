@@ -22,7 +22,7 @@ export class MockUserRedisService implements UserRedisService {
         case EmailType.AUTH:
           return await this.redis.set(redisKey, context.authCode, 60 * 30);
         case EmailType.BLOCK:
-          return console.log('STORE BLOCK REDIS KEY');
+          return 'OK';
       }
     } catch (e) {
       await this.redis.del(redisKey);
