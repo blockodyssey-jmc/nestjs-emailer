@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ProducerController } from './controllers/producer.controller';
 import { ProducerService } from './services/producer.service';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import * as config from 'config';
+const rabbitmq: any = config.get('rabbitmq');
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
           type: 'topic',
         },
       ],
-      uri: 'amqp://user:password@localhost:5672',
+      uri: rabbitmq.uri,
       channels: {
         'channel-1': {
           prefetchCount: 1,

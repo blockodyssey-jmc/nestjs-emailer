@@ -9,7 +9,8 @@ export class ProducerController {
 
   @Post('')
   sendEmail(@Body() mailRequestDto: MailRequestDto) {
-    const anUser = new UserEntity('ming@blockodyssey.io', '+대상 유저+');
+    const email = '임의의 이메일 주소';
+    const anUser = new UserEntity(email, '+대상 유저+');
 
     return this.producerService.sendMail(mailRequestDto, anUser);
   }

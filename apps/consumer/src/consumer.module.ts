@@ -6,6 +6,9 @@ import { MockRedisService } from './services/redis.service';
 import { MockUserRedisService } from './services/userRedis.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import * as config from 'config';
+const rabbitmq: any = config.get('consumerRabbitmq');
+const smtp: any = config.get('smtp');
 
 @Module({
   imports: [
@@ -16,11 +19,11 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
           type: 'topic',
         },
         {
-          name: 'push',
+          name: 'sms',
           type: 'topic',
         },
       ],
-      uri: 'amqp://user:password@localhost:5672',
+      uri: rabbitmq.uri,
       enableControllerDiscovery: true,
       connectionInitOptions: { wait: false },
       defaultSubscribeErrorBehavior: MessageHandlerErrorBehavior.ACK,
@@ -36,19 +39,19 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'localhost',
-        port: 1025,
-        ignoreTLS: true,
-        secure: false,
+        host: smtp.host,
+        port: smtp.port,
+        secure: smtp.secure,
         auth: {
-          user: process.env.MAILDEV_INCOMING_USER,
-          pass: process.env.MAILDEV_INCOMING_PASS,
+          user: smtp.user,
+          pass: smtp.pass,
         },
       },
+
       defaults: {
         from: '"No Reply" <no-reply@localhost>',
       },
-      preview: true,
+      preview: false,
       template: {
         dir: process.cwd() + '/apps/consumer/src/templates/',
         adapter: new EjsAdapter(),
